@@ -6,7 +6,7 @@ MASTODON_SERVER="https://botsin.space/"
 # Your Mastodon account's access token
 MASTODON_TOKEN="ABCDefgh123456789x0x0x0x0x0x0x0x0x0x0x0"
 
-# The S3 bucket where your video clips are stored
+# The S3 bucket where your video clips are stored, including a trailing slash
 S3_BUCKET="s3://videobucket.s3.amazonaws.com/directory/"
 
 # Update the file listing 5% of the time
