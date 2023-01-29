@@ -30,7 +30,7 @@ aws s3 cp "${S3_BUCKET}${ENTRY}" "$ENTRY"
 
 # Get the caption text
 ffmpeg -i "$ENTRY" -map 0:s:0 test.srt
-CAPTION=$(cat caption.srt |tail -n +3 |tr '\n\r' ' ')
+CAPTION=$(tail -n +3 caption.srt |tr '\n\r' ' ')
 rm -f caption.srt
 
 # Upload the video to Mastodon
