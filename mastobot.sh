@@ -24,7 +24,7 @@ if [ $(( $RANDOM % 20 + 1 )) -eq 1 ]; then
 fi
 
 # Select a random filename from the list
-ENTRY=$(sort -R ${SCRIPT_DIR}/files.txt |head -1)
+ENTRY=$(sort -R "${SCRIPT_DIR}"/files.txt |head -1)
 
 # Remove any trailing carriage return from the filename
 ENTRY=$(echo "$ENTRY" | tr -d '\r')
@@ -39,8 +39,8 @@ aws s3 cp "${S3_BUCKET}${ENTRY}" "$ENTRY" || exit_error "Could not get video"
 
 # Get the caption text
 ffmpeg -i "$ENTRY" -map 0:s:0 test.srt
-CAPTION=$(tail -n +3 caption.srt |tr '\n\r' ' ')
-rm -f caption.srt
+CAPTION=$(tail -n +3 "${SCRIPT_DIR}"/caption.srt |tr '\n\r' ' ')
+rm -f "${SCRIPT_DIR}"/caption.srt
 
 # Upload the video to Mastodon
 RESPONSE=$(curl -H "Authorization: Bearer ${MASTODON_TOKEN}" -X POST -H "Content-Type: multipart/form-data" ${MASTODON_SERVER}api/v1/media --form file="@$ENTRY" |grep -E -o "\"id\":\"([0-9]+)\"")
@@ -65,4 +65,4 @@ if [ "$RESULT" -ne 0 ]; then
 fi
 
 # Delete the video file
-rm -f "$ENTRY"
+rm -f "$SCRIPT_DIR"/"$ENTRY"
