@@ -42,6 +42,11 @@ ffmpeg -i "$ENTRY" -map 0:s:0 caption.srt
 CAPTION=$(tail -n +3 "${SCRIPT_DIR}"/caption.srt |tr '\n\r' ' ')
 rm -f "${SCRIPT_DIR}"/caption.srt
 
+# If the caption text is a fragment, just make it blank
+if [ ${#CAPTION} -lt 2 ]; then
+    CAPTION=" "
+fi
+
 # Upload the video to Mastodon
 RESPONSE=$(curl -H "Authorization: Bearer ${MASTODON_TOKEN}" -X POST -H "Content-Type: multipart/form-data" ${MASTODON_SERVER}api/v1/media --form file="@$ENTRY" |grep -E -o "\"id\":\"([0-9]+)\"")
 RESULT=$?
