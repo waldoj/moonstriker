@@ -30,7 +30,7 @@ ENTRY=$(sort -R "${SCRIPT_DIR}"/files.txt |head -1)
 ENTRY=$(echo "$ENTRY" | tr -d '\r')
 
 # Ensure that the filename is a plausible length
-if [ ${#ENTRY} -lt 5 ]; then
+if [ ${#ENTRY} < 5 ]; then
     exit 1
 fi
 
@@ -43,7 +43,7 @@ CAPTION=$(tail -n +3 "${SCRIPT_DIR}"/caption.srt |tr '\n\r' ' ')
 rm -f "${SCRIPT_DIR}"/caption.srt
 
 # If the caption text is a fragment, just make it blank
-if [ ${#CAPTION} -lt 2 ]; then
+if [ ${#CAPTION} < 2 ]; then
     CAPTION=" "
 fi
 
