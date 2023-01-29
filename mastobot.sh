@@ -9,6 +9,15 @@ MASTODON_TOKEN="ABCDefgh123456789x0x0x0x0x0x0x0x0x0x0x0"
 # The S3 bucket where your video clips are stored, including a trailing slash
 S3_BUCKET="s3://videobucket.s3.amazonaws.com/directory/"
 
+# Get the name of the working directory
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+
+# Define a failure function
+function error_exit {
+    printf '%s\n' "$1" >&2
+    exit "${2-1}"
+}
+
 # Update the file listing 5% of the time
 if [ $(( $RANDOM % 20 + 1 )) -eq 1 ]; then
 	aws s3 ls ${S3_BUCKET} |grep -E -o "([0-9]+).m4v" > files.txt
@@ -26,7 +35,7 @@ if [ ${#ENTRY} -lt 5 ]; then
 fi
 
 # Copy the video over from S3
-aws s3 cp "${S3_BUCKET}${ENTRY}" "$ENTRY"
+aws s3 cp "${S3_BUCKET}${ENTRY}" "$ENTRY" || exit_error "Could not get video"
 
 # Get the caption text
 ffmpeg -i "$ENTRY" -map 0:s:0 test.srt
@@ -35,17 +44,25 @@ rm -f caption.srt
 
 # Upload the video to Mastodon
 RESPONSE=$(curl -H "Authorization: Bearer ${MASTODON_TOKEN}" -X POST -H "Content-Type: multipart/form-data" ${MASTODON_SERVER}api/v1/media --form file="@$ENTRY" |grep -E -o "\"id\":\"([0-9]+)\"")
+RESULT=$?
+if [ "$RESULT" -ne 0 ]; then
+    exit_error "Video could not be uploaded"
+fi
 
 # Strip the media ID response down to the integer; this is in lieu of actually parsing the JSON
 MEDIA_ID=$(echo "$RESPONSE" |grep -E -o "[0-9]+")
 
 # If the upload didn't yield a valid media ID, give up
 if [ ${#MEDIA_ID} -lt 10 ]; then
-    exit 1
+    exit_error "Video upload didn’t return a valid media ID"
 fi
 
 # Send the message to Mastodon
 curl "$MASTODON_SERVER"/api/v1/statuses -H "Authorization: Bearer ${MASTODON_TOKEN}" -F "status=$CAPTION" -F "media_ids[]=$MEDIA_ID"
+RESULT=$?
+if [ "$RESULT" -ne 0 ]; then
+    exit_error "Post of message to Mastodon failed"
+fi
 
 # Delete the video file
 rm -f "$ENTRY"
