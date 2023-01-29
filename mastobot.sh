@@ -28,6 +28,11 @@ fi
 # Copy the video over from S3
 aws s3 cp "${S3_BUCKET}${ENTRY}" "$ENTRY"
 
+# Get the caption text
+ffmpeg -i "$ENTRY" -map 0:s:0 test.srt
+CAPTION=$(cat caption.srt |tail -n +3 |tr '\n\r' ' ')
+rm -f caption.srt
+
 # Upload the video to Mastodon
 RESPONSE=$(curl -H "Authorization: Bearer ${MASTODON_TOKEN}" -X POST -H "Content-Type: multipart/form-data" ${MASTODON_SERVER}api/v1/media --form file="@$ENTRY" |grep -E -o "\"id\":\"([0-9]+)\"")
 
@@ -40,7 +45,7 @@ if [ ${#MEDIA_ID} -lt 10 ]; then
 fi
 
 # Send the message to Mastodon
-curl https://botsin.space/api/v1/statuses -H "Authorization: Bearer ${MASTODON_TOKEN}" -F "status=." -F "media_ids[]=$MEDIA_ID"
+curl https://botsin.space/api/v1/statuses -H "Authorization: Bearer ${MASTODON_TOKEN}" -F "status=$CAPTION" -F "media_ids[]=$MEDIA_ID"
 
 # Delete the video file
 rm -f "$ENTRY"
