@@ -9,6 +9,7 @@ The video processor iterates through each caption in an SRT file and, for each o
 
 * Prerequisite: a video file that contains captions and an SRT file of those captions
 * Ensure that ffmpeg is installed
+* If running this on macOS 13.1 or older, the version of `date` that ships with it doesn't support sub-second accuracy. Install GNU date via `brew install coreutils` and change the `date` reference in `processor.sh` to `gdate`.
 * Configure `processor.sh` to use the correct filenames for the two files (or name them `video.m4v` and `captions.srt`)
 
 ### Mastodon bot
