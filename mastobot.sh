@@ -59,6 +59,8 @@ CAPTION=${CAPTION//"'"/"\'"}
 # Trim string and collapse double spaces into one
 CAPTION=$(echo "$CAPTION" |xargs)
 
+# Escape double quotes, this time for cURL
+CAPTION=${CAPTION//'"'/'\"'}
 
 # Upload the video to Mastodon
 RESPONSE=$(curl -H "Authorization: Bearer ${MASTODON_TOKEN}" -X POST -H "Content-Type: multipart/form-data" ${MASTODON_SERVER}api/v1/media --form file="@$ENTRY" |grep -E -o "\"id\":\"([0-9]+)\"")
@@ -76,7 +78,7 @@ if [ ${#MEDIA_ID} -lt 10 ]; then
 fi
 
 # Send the message to Mastodon
-curl "$MASTODON_SERVER"/api/v1/statuses -H "Authorization: Bearer ${MASTODON_TOKEN}" -F "status=$CAPTION" -F "media_ids[]=$MEDIA_ID"
+curl "$MASTODON_SERVER"/api/v1/statuses -H "Authorization: Bearer ${MASTODON_TOKEN}" -F "status=\"$CAPTION\"" -F "media_ids[]=$MEDIA_ID"
 RESULT=$?
 if [ "$RESULT" -ne 0 ]; then
     exit_error "Post of message to Mastodon failed"
