@@ -7,7 +7,7 @@ MASTODON_SERVER="https://botsin.space/"
 MASTODON_TOKEN="ABCDefgh123456789x0x0x0x0x0x0x0x0x0x0x0"
 
 # The S3 bucket where your video clips are stored, including a trailing slash
-S3_BUCKET="s3://videobucket.s3.amazonaws.com/directory/"
+S3_BUCKET="s3://videobucket.amazonaws.com/directory/"
 
 # Get the name of the working directory
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
