@@ -53,8 +53,12 @@ if [ "${CAPTION:0:2}" == "- " ]; then
     CAPTION=${CAPTION/" - "/"$EOL- "}
 fi
 
-# Collapse double spaces into one
-CAPTION=${CAPTION/"  "/ " "}
+# Escape single quotes in caption to prep for xargs
+CAPTION=${CAPTION//"'"/"\'"}
+
+# Trim string and collapse double spaces into one
+CAPTION=$(echo "$CAPTION" |xargs)
+
 
 # Upload the video to Mastodon
 RESPONSE=$(curl -H "Authorization: Bearer ${MASTODON_TOKEN}" -X POST -H "Content-Type: multipart/form-data" ${MASTODON_SERVER}api/v1/media --form file="@$ENTRY" |grep -E -o "\"id\":\"([0-9]+)\"")
