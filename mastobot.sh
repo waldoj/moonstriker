@@ -43,7 +43,7 @@ CAPTION=$(tail -n +3 "${SCRIPT_DIR}"/caption.srt |tr '\n\r' ' ')
 rm -f "${SCRIPT_DIR}"/caption.srt
 
 # If the caption text is a fragment, just make it blank
-if [ ${#CAPTION} -lt 2 ]; then
+if [ ${#CAPTION} -lt 3 ]; then
     CAPTION=" "
 fi
 
