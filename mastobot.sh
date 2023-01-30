@@ -47,6 +47,12 @@ if [ ${#CAPTION} -lt 2 ]; then
     CAPTION=" "
 fi
 
+# Handle captions that include two people speaking
+if [ "${CAPTION:0:2}" == "- " ]; then
+    EOL=$'\n'
+    CAPTION=${CAPTION/" - "/"$EOL- "}
+fi
+
 # Upload the video to Mastodon
 RESPONSE=$(curl -H "Authorization: Bearer ${MASTODON_TOKEN}" -X POST -H "Content-Type: multipart/form-data" ${MASTODON_SERVER}api/v1/media --form file="@$ENTRY" |grep -E -o "\"id\":\"([0-9]+)\"")
 RESULT=$?
