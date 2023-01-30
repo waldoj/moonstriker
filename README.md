@@ -1,5 +1,5 @@
-# Mastobot
-A pair of Bash scripts to divide up a video into chunks—one per caption—and then post them to Mastodon, e.g. as a bot. This is designed to post MP4s, but with some tweaks it can post any asset (e.g. images, audio).
+# Moonstriker
+A pair of Bash scripts to divide up a video into chunks—one per caption—and then post them to Mastodon, e.g. as a bot. This is designed to post MP4s, but with some tweaks it can post any asset (e.g. images, audio). It was created for excerpts of _Moonstruck,_ hence the name.
 
 The video processor iterates through each caption in an SRT file and, for each one, saves that clip from the associated video. The Mastodon bot gets a file listing from an S3 bucket, randomly selects one of the files, and posts it to Mastodon.
 
@@ -9,6 +9,7 @@ The video processor iterates through each caption in an SRT file and, for each o
 
 * Prerequisite: a video file that contains captions and an SRT file of those captions
 * Ensure that ffmpeg is installed
+* If running this on macOS 13.1 or older, the version of `date` that ships with it doesn't support sub-second accuracy. Install GNU date via `brew install coreutils` and change the `date` reference in `processor.sh` to `gdate`.
 * Configure `processor.sh` to use the correct filenames for the two files (or name them `video.m4v` and `captions.srt`)
 
 ### Mastodon bot
