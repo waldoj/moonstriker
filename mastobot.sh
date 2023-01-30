@@ -13,7 +13,7 @@ S3_BUCKET="s3://videobucket.amazonaws.com/directory/"
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
 # Define a failure function
-function error_exit {
+function exit_error {
     printf '%s\n' "$1" >&2
     exit "${2-1}"
 }
