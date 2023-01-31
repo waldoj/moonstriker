@@ -76,9 +76,10 @@ fi
 
 # Send the message to Mastodon
 curl "$MASTODON_SERVER"/api/v1/statuses -H "Authorization: Bearer ${MASTODON_TOKEN}" -F "status=\"$CAPTION\"" -F "media_ids[]=$MEDIA_ID"
+
 RESULT=$?
 if [ "$RESULT" -ne 0 ]; then
-    exit_error "Post of message to Mastodon failed"
+    exit_error "Posting message to Mastodon failed"
 fi
 
 # Delete the video file
