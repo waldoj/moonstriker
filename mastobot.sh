@@ -56,7 +56,7 @@ fi
 # Collapse double spaces into one
 CAPTION=${CAPTION//"  "/" "}
 
-# Escape double quotes, this time for cURL
+# Escape double quotes for cURL
 CAPTION=${CAPTION//'"'/'\"'}
 
 # Upload the video to Mastodon
