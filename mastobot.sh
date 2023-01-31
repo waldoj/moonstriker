@@ -53,9 +53,8 @@ if [ "${CAPTION:0:2}" == "- " ]; then
     CAPTION=${CAPTION/" - "/"$EOL- "}
 fi
 
-
-# Trim string and collapse double spaces into one
-CAPTION=$(echo "$CAPTION" |xargs)
+# Collapse double spaces into one
+CAPTION=${CAPTION//"  "/" "}
 
 # Escape double quotes, this time for cURL
 CAPTION=${CAPTION//'"'/'\"'}
