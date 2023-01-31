@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# URL of your Mastodon server, including a trailing slash
-MASTODON_SERVER="https://botsin.space/"
+# URL of your Mastodon server, without a trailing slash
+MASTODON_SERVER="https://botsin.space"
 
 # Your Mastodon account's access token
 MASTODON_TOKEN="ABCDefgh123456789x0x0x0x0x0x0x0x0x0x0x0"
@@ -63,7 +63,7 @@ CAPTION=$(echo "$CAPTION" |xargs)
 CAPTION=${CAPTION//'"'/'\"'}
 
 # Upload the video to Mastodon
-RESPONSE=$(curl -H "Authorization: Bearer ${MASTODON_TOKEN}" -X POST -H "Content-Type: multipart/form-data" ${MASTODON_SERVER}api/v1/media --form file="@$ENTRY" |grep -E -o "\"id\":\"([0-9]+)\"")
+RESPONSE=$(curl -H "Authorization: Bearer ${MASTODON_TOKEN}" -X POST -H "Content-Type: multipart/form-data" ${MASTODON_SERVER}/api/v1/media --form file="@$ENTRY" |grep -E -o "\"id\":\"([0-9]+)\"")
 RESULT=$?
 if [ "$RESULT" -ne 0 ]; then
     exit_error "Video could not be uploaded"
