@@ -12,7 +12,7 @@ MASTODON_TOKEN="ABCDefgh123456789x0x0x0x0x0x0x0x0x0x0x0"
 S3_BUCKET="s3://videobucket.amazonaws.com/directory/"
 
 # Get the name of the working directory
-SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+cd "$(dirname "$0")" || exit
 
 # Define a failure function
 function exit_error {
@@ -26,7 +26,7 @@ if [ $(( $RANDOM % 20 + 1 )) -eq 1 ]; then
 fi
 
 # Select a random filename from the list
-ENTRY=$(sort -R "${SCRIPT_DIR}"/files.txt |head -1)
+ENTRY=$(sort -R files.txt |head -1)
 
 # Remove any trailing carriage return from the filename
 ENTRY=$(echo "$ENTRY" | tr -d '\r')
@@ -41,8 +41,8 @@ aws s3 cp "${S3_BUCKET}${ENTRY}" "$ENTRY" || exit_error "Could not get video"
 
 # Get the caption text
 ffmpeg -i "$ENTRY" -map 0:s:0 caption.srt
-CAPTION=$(tail -n +3 "${SCRIPT_DIR}"/caption.srt |tr '\n\r' ' ')
-rm -f "${SCRIPT_DIR}"/caption.srt
+CAPTION=$(tail -n +3 caption.srt |tr '\n\r' ' ')
+rm -f caption.srt
 
 # If the caption text is a fragment, just make it blank
 if [ ${#CAPTION} -lt 3 ]; then
@@ -85,4 +85,4 @@ if [ "$RESULT" -ne 0 ]; then
 fi
 
 # Delete the video file
-rm -f "$SCRIPT_DIR"/"$ENTRY"
+rm -f "$ENTRY"
