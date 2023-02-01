@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -x
+
 # URL of your Mastodon server, without a trailing slash
 MASTODON_SERVER="https://botsin.space"
 
@@ -75,7 +77,7 @@ if [ ${#MEDIA_ID} -lt 10 ]; then
 fi
 
 # Send the message to Mastodon
-curl "$MASTODON_SERVER"/api/v1/statuses -H "Authorization: Bearer ${MASTODON_TOKEN}" -F "status=\"$CAPTION\"" -F "media_ids[]=$MEDIA_ID"
+curl "$MASTODON_SERVER"/api/v1/statuses -H "Authorization: Bearer ${MASTODON_TOKEN}" -F "status=\"${CAPTION}\"" -F "media_ids[]=${MEDIA_ID}"
 
 RESULT=$?
 if [ "$RESULT" -ne 0 ]; then
