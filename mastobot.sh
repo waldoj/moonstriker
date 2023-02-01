@@ -39,9 +39,9 @@ fi
 # Copy the video over from S3
 aws s3 cp "${S3_BUCKET}${ENTRY}" "$ENTRY" || exit_error "Could not get video"
 
-# Get the caption text (escaping quotes)
+# Get the caption text
 ffmpeg -i "$ENTRY" -map 0:s:0 caption.srt
-CAPTION=$(tail -n +3 "${SCRIPT_DIR}"/caption.srt |tr '\n\r' ' ' |tr "'" "\'")
+CAPTION=$(tail -n +3 "${SCRIPT_DIR}"/caption.srt |tr '\n\r' ' ')
 rm -f "${SCRIPT_DIR}"/caption.srt
 
 # If the caption text is a fragment, just make it blank
