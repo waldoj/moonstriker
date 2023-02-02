@@ -58,6 +58,11 @@ fi
 # Collapse double spaces into one
 CAPTION=${CAPTION//"  "/" "}
 
+# Hack off a trailing space, if there is one
+if [[ ${CAPTION: -1:1} == " " ]]; then
+    CAPTION=${CAPTION:0:-1}
+fi
+
 # Escape double quotes for cURL
 CAPTION=${CAPTION//'"'/'\"'}
 
