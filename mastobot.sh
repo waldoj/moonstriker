@@ -17,6 +17,8 @@ cd "$(dirname "$0")" || exit
 # Define a failure function
 function exit_error {
     printf '%s\n' "$1" >&2
+    rm -f "$ENTRY"
+    rm -f caption.srt
     exit "${2-1}"
 }
 
