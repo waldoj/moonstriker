@@ -38,6 +38,9 @@ if [ ${#ENTRY} -lt 5 ]; then
     exit 1
 fi
 
+# Add this to the history of filenames
+echo "$ENTRY" >> history.txt
+
 # Copy the video over from S3
 aws s3 cp "${S3_BUCKET}${ENTRY}" "$ENTRY" || exit_error "Could not get video"
 
