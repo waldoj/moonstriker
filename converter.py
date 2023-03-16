@@ -22,7 +22,6 @@ with open('captions.srt', 'r') as srt_file, open('captions.csv', 'w', newline=''
             end_time = time_object.hour * 3600 + time_object.minute * 60 + time_object.second + time_object.microsecond / 1000000.0
         
             # Write the data to the CSV file
-            print(number, start_time, end_time, text)
             csv_writer.writerow([number, start_time, end_time, text])
             lines = []
 
