@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 VIDEO_FILE="video.m4v"
 CAPTIONS_FILE="captions.srt"
