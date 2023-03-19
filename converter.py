@@ -28,4 +28,85 @@ with open('captions.srt', 'r') as srt_file, open('captions.csv', 'w', newline=''
         else:
             lines.append(line.strip())
 
-print('Conversion complete')
+# Now read records back out of the CSV file
+with open('captions.csv', 'r') as csv_file:
+
+    # Create a reader object
+    csv_reader = csv.DictReader(csv_file, fieldnames=['id', 'start_time', 'end_time', 'text'])
+
+    # Create an empty dict to store the rows
+    captions = {}
+
+    # Loop through each row in the CSV file
+    for row in csv_reader:
+        # Append the row to the dict
+        id = row['id']
+        captions[id] = row
+
+# Create an empty list of clips
+clips = {}
+
+# Track how many captions have been added to each clip
+caption_count = 0
+
+# Increment through results
+for caption in captions.items():
+    
+    # Go one level deeper (otherwise we just get the ID)
+    caption=caption[1]
+    
+    # If we're not already building a clip
+    if(caption_count == 0):
+        clip = {}
+        clip['id'] = caption['id']
+        clip['start_time'] = caption['start_time']
+        clip['text'] = caption['text']
+
+    # Set this aside for conditional analysis
+    text=caption['text']
+
+    # If the caption text starts with a hyphen, it has dialog from multiple people -- make that
+    # the entire clip and continue to the next caption
+    if(text[0:1] == '-'):
+        clip['id'] = caption['id']
+        clip['end_time'] = caption['end_time']
+        id=clip['id']
+        clips[id] = clip
+        caption_count = 0
+        continue
+
+    # If the caption text ends with a period, exclamation point, or question mark (but not an
+    # ellipsis), this is the end of the clip.
+    if (text[-1:] == '.' or text[-1:] == '!' or text[-1:] == '?') and text[-3:] != '...':
+        
+        if (caption_count == 0):
+            clip['end_time'] = caption['end_time']
+            id=clip['id']
+            clips[id] = clip
+            caption_count = 0
+            continue
+        
+        else:
+            clip['end_time'] = caption['end_time']
+            clip['text'] = clip['text'] + ' ' + caption['text']
+            id=clip['id']
+            clips[id] = clip
+            caption_count = 0
+            continue
+    
+    # If this is just another line, append the text and move on
+    if(caption_count > 0):
+        clip['text'] = clip['text'] + ' ' + caption['text']
+    
+    caption_count += 1
+
+# Write the list to a CSV file
+with open('clips.csv', 'w', newline='') as file:
+    csv_writer = csv.writer(file, delimiter=',')
+    
+    # Write the headers
+    csv_writer.writerow(['id', 'start_time', 'text', 'end_time'])
+    
+    # Write the values
+    for clip in clips.values():
+        csv_writer.writerow(clip.values())
