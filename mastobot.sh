@@ -46,7 +46,7 @@ aws s3 cp "${S3_BUCKET}${ENTRY}" "$ENTRY" || exit_error "Could not get video"
 
 # Get the caption text
 ffmpeg -i "$ENTRY" -map 0:s:0 caption.srt
-CAPTION=$(tail -n +3 caption.srt |tr '\n\r' ' ')
+CAPTION=$(grep --extended-regexp -v "([,:0-9> -]+)$" caption.srt |tr '\n\r' ' ' |sed  -e 's/  / /g')
 rm -f caption.srt
 
 # If the caption text is a fragment, just make it blank
