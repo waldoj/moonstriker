@@ -27,16 +27,34 @@ if [ $(( $RANDOM % 20 + 1 )) -eq 1 ]; then
 	aws s3 ls ${S3_BUCKET} |grep -E -o "([0-9]+).m4v" > files.txt
 fi
 
-# Select a random filename from the list
-ENTRY=$(sort -R files.txt |head -1)
+# Store the total number of clips
+CLIP_COUNT=$(wc -l files.txt |cut -d " " -f 1)
 
-# Remove any trailing carriage return from the filename
-ENTRY=$(echo "$ENTRY" | tr -d '\r')
+# Select a clip, making sure that it hasn't been used recently
+while :
+do
 
-# Ensure that the filename is a plausible length
-if [ ${#ENTRY} -lt 5 ]; then
-    exit 1
-fi
+    # Select a random filename from the list
+    ENTRY=$(sort -R files.txt |head -1)
+
+    # Remove any trailing carriage return from the filename
+    ENTRY=$(echo "$ENTRY" | tr -d '\r')
+
+    # Ensure that the filename is a plausible length
+    if [ ${#ENTRY} -lt 5 ]; then
+        exit 1
+    fi
+
+    # Divide the total number of clips in half (n clips), and if this proposed clip hasn't been
+    # posted in the last n times, then proceed (otherwise, loop around again)
+    CLIP_HISTORY=$(($CLIP_COUNT/2))
+    CLIP_HISTORY=$(printf "%.0f" $CLIP_HISTORY)
+    HISTORY=$(tail -"$CLIP_HISTORY" history.txt)
+    if [[ ! " ${HISTORY[*]} " =~ " ${ENTRY} " ]]; then
+        break
+    fi    
+    
+done
 
 # Add this to the history of filenames
 echo "$ENTRY" >> history.txt
