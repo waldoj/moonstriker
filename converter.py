@@ -75,9 +75,9 @@ for caption in captions.items():
         caption_count = 0
         continue
 
-    # If the caption text ends with a period, exclamation point, or question mark (but not an
-    # ellipsis), this is the end of the clip.
-    if (text[-1:] == '.' or text[-1:] == '!' or text[-1:] == '?') and text[-3:] != '...':
+    # If the caption text ends with a period, exclamation point, question mark, or quotation mark
+    # (but not an ellipsis), this is the end of the clip.
+    if(text[-1:] == '.' or text[-1:] == '!' or text[-1:] == '?' or text[-1:] == '"') and text[-3:] != '...':
         
         if (caption_count == 0):
             clip['end_time'] = caption['end_time']
