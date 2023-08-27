@@ -99,7 +99,7 @@ add_to_history
 
 # Get the caption text
 ffmpeg -i "$ENTRY" -map 0:s:0 caption.srt
-CAPTION=$(grep --extended-regexp -v "([,:0-9> -]+)$" caption.srt |tr '\n\r' ' ' |sed  -e 's/  / /g')
+CAPTION=$(grep --extended-regexp -v "^[0-9]+\s*$|^[0-9]{2}:[0-9]{2}:[0-9]{2},[0-9]{3}\s*-->\s*[0-9]{2}:[0-9]{2}:[0-9]{2},[0-9]{3}\s*$" caption.srt |tr '\n\r' ' ' |sed  -e 's/  / /g')
 rm -f caption.srt
 
 # If the caption text is a fragment, just make it blank
