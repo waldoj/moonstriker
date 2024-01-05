@@ -115,10 +115,10 @@ if [ "${CAPTION:0:2}" == "- " ]; then
     CAPTION=${CAPTION/" - "/"$EOL- "}
 
     # Quote each line separately
-    CAPTION=${CAPTION//'"'/''}
-    CAPTION=${CAPTION//'- '/'- "'}
-    CAPTION=${CAPTION//"$EOL"/'"' $EOL}
-    CAPTION=$CAPTION\"
+    #CAPTION=${CAPTION//'"'/''}
+    #CAPTION=${CAPTION//'- '/'- "'}
+    #CAPTION=${CAPTION//"$EOL"/'"' $EOL}
+    #CAPTION=$CAPTION\"
 fi
 
 # Collapse double spaces into one
