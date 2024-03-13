@@ -21,9 +21,8 @@ do
     fi
 
     # Create the video clip
-    ffmpeg -nostdin -loglevel error -ss "${columns[0]}" -t "$DURATION" -copyts -i "$VIDEO_FILE" \
-        -i "$CAPTIONS_FILE" -ss "${columns[0]}" -t "$DURATION" -vf \
-        subtitles="$CAPTIONS_FILE" -scodec mov_text clips/"$i".m4v
+    ffmpeg -nostdin -loglevel error -i "$VIDEO_FILE" -ss "${columns[0]}" -t "$DURATION" \
+        -vf "subtitles=$CAPTIONS_FILE" -c:v libx264 -c:a aac clips/"$i".m4v
     i=$((1 + i))
 
 done
