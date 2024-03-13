@@ -6,6 +6,8 @@ VIDEO_FILE="video.mp4"
 CAPTIONS_FILE="captions.srt"
 CLIPS_FILE="clips.csv"
 
+mkdir -p clips
+
 # Iterate through every row in the CSV file, getting the start and end timestamps for each
 csvcut -c 2,4 "$CLIPS_FILE" |while read -r row
 do
