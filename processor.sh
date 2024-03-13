@@ -15,6 +15,10 @@ do
     IFS=$',' read -ra columns <<< "$row"
     
     DURATION=$(echo "${columns[1]} - ${columns[0]}" |bc)
+    # ffmpeg insists on a leading 0 for periods less than 1 second
+    if (( $(echo "$DURATION < 1" | bc) )); then
+        DURATION="0$DURATION"
+    fi
 
     # Create the video clip
     ffmpeg -nostdin -loglevel error -ss "${columns[0]}" -t "$DURATION" -copyts -i "$VIDEO_FILE" \
