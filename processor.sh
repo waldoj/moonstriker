@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
-VIDEO_FILE="video.m4v"
+set -x
+
+VIDEO_FILE="video.mp4"
 CAPTIONS_FILE="captions.srt"
 CLIPS_FILE="clips.csv"
 
