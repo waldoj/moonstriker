@@ -15,7 +15,7 @@ The video processor iterates through each caption in an SRT file and, for each o
 ### Mastodon bot
 
 * Ensure that ffmpeg, cURL, and AWS CLI are installed, and that the account is configured to have permission to retrieve files from S3
-* Create a new application in your Mastodon account’s settings, giving it permission to create new posts (no other permissions are required), and note the application’s access token
+* Create a new application in your Mastodon account’s settings, giving it `write:statuses` and `write:media` permissions (no other permissions are required), and note the application’s access token
 * Put your video clips into a dedicated S3 bucket (or a dedicated directory within an S3 bucket)
 * Configure the three variables in the header of `mastobot.sh`: `MASTODON_SERVER`, `MASTODON_TOKEN`, and `S3_BUCKET`
 * Create a new cron task to run `mastobot.sh` periodically
