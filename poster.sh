@@ -100,16 +100,16 @@ fi
 # own dialogue, which already goes in the post body -- repeating it verbatim
 # would tell a screen reader nothing it is not already being told.
 MEDIA_ID=$(masto_upload_media "$ENTRY" "") \
-    || exit_error "Video could not be uploaded"
+    || exit_error "Video could not be uploaded: HTTP ${BOTLIB_LAST_STATUS} ${BOTLIB_LAST_BODY}"
 
 masto_await_media "$MEDIA_ID" \
-    || exit_error "Mastodon never finished processing the video"
+    || exit_error "Mastodon never finished processing the video: HTTP ${BOTLIB_LAST_STATUS} ${BOTLIB_LAST_BODY}"
 
 # Send the message to Mastodon. The caption is sent as it stands: it used to be
 # wrapped in literal quote characters, so a clip with no dialogue posted as the
 # three characters `" "` rather than as video alone.
 masto_post_status "$CAPTION" "$MEDIA_ID" > /dev/null \
-    || exit_error "Posting message to Mastodon failed"
+    || exit_error "Posting message to Mastodon failed: HTTP ${BOTLIB_LAST_STATUS} ${BOTLIB_LAST_BODY}"
 
 log_info "posted to mastodon media_id=${MEDIA_ID} clip=${ENTRY}"
 
